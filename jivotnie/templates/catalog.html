@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Каталог животных{% endblock %}
+
+{% block content %}
+<section class="page-header page-header-catalog">
+    <div class="container">
+        <h1>🐕 Наши питомцы</h1>
+        <p>Выберите своего нового друга</p>
+    </div>
+</section>
+
+<section class="catalog-filters">
+    <div class="container">
+        <div class="filter-buttons">
+            <a href="/catalog?type=all" class="filter-btn {% if selected_type == 'all' %}active{% endif %}">Все</a>
+            <a href="/catalog?type=Кошка" class="filter-btn {% if selected_type == 'Кошка' %}active{% endif %}">🐱 Кошки</a>
+            <a href="/catalog?type=Собака" class="filter-btn {% if selected_type == 'Собака' %}active{% endif %}">🐶 Собаки</a>
+        </div>
+    </div>
+</section>
+
+<section class="pets-list">
+    <div class="container">
+        <div class="pets-grid">
+            {% for animal in animals %}
+            <div class="pet-card">
+                <div class="pet-photo">
+                    <img src="{{ url_for('static', filename='uploads/' + animal[6]) }}" alt="{{ animal[1] }}">
+                    <span class="pet-type-badge">{{ animal[2] }}</span>
+                </div>
+                <div class="pet-info">
+                    <h3>{{ animal[1] }}</h3>
+                    <p class="pet-breed">{{ animal[3] }}</p>
+                    <p class="pet-age">📅 Возраст: {{ animal[4] }}</p>
+                    <p class="pet-desc">{{ animal[5][:100] }}{% if animal[5]|length > 100 %}...{% endif %}</p>
+                    <a href="/apply/{{ animal[0] }}" class="btn-small">Хочу забрать →</a>
+                </div>
+            </div>
+            {% else %}
+            <div class="no-pets">
+                <p>😢 В этой категории пока нет животных</p>
+                <a href="/catalog?type=all" class="btn-primary">Посмотреть всех</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

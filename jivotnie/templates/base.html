@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Приют для животных{% endblock %} 🐾</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo"> Дом Друзей</a>
+            <ul class="nav-menu">
+                <li><a href="/">Главная</a></li>
+                <li><a href="/catalog">Каталог</a></li>
+                <li><a href="/about">О нас</a></li>
+                <li><a href="/contacts">Контакты</a></li>
+                {% if session.username %}
+                    <li class="user-welcome">👤 {{ session.username }}</li>
+                    {% if session.role == 'admin' %}
+                        <li><a href="/admin" class="admin-link">🔧 Админ-панель</a></li>
+                    {% endif %}
+                    <li><a href="/logout" class="logout-btn">🚪 Выйти</a></li>
+                {% else %}
+                    <li><a href="/login" class="login-btn">Вход</a></li>
+                    <li><a href="/register" class="register-btn">Регистрация</a></li>
+                {% endif %}
+            </ul>
+            <div class="hamburger">☰</div>
+        </div>
+    </nav>
+
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>🐾 Приют для животных "Дом Друзей" | Забота о каждом хвосте с 2024 года</p>
+            <p>📞 Горячая линия: +7 (999) 123-45-67</p>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            document.querySelector('.nav-menu').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
