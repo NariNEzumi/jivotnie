@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Приют для животных{% endblock %} 🐾</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Стили для выпадающего меню пользователя */
+        .user-menu {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .user-menu .dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: transparent;
+            min-width: 180px;
+            border-radius: 12px;
+            z-index: 1000;
+            margin-top: 8px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+        .user-menu:hover .dropdown {
+            display: block;
+        }
+        .dropdown a {
+            display: block;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.2s;
+            margin: 0;
+            border: none;
+        }
+        .dropdown .admin-link {
+            background: #ffa502;
+            color: white;
+        }
+        .dropdown .admin-link:hover {
+            background: #e09400;
+        }
+        .dropdown .logout-btn {
+            background: #ff4757;
+            color: white;
+        }
+        .dropdown .logout-btn:hover {
+            background: #e03e4e;
+        }
+        .dropdown {
+            background: transparent;
+        }
+        .user-welcome {
+            background: #e0e7ff;
+            padding: 8px 18px;
+            border-radius: 40px;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 14px;
+            margin-left: 5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .user-welcome::after {
+            content: "▼";
+            font-size: 10px;
+            color: #667eea;
+        }
+        @media (max-width: 768px) {
+            .user-menu {
+                width: 100%;
+            }
+            .user-menu .dropdown {
+                position: static;
+                box-shadow: none;
+                margin-top: 5px;
+            }
+            .user-menu:hover .dropdown {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">🐾 Дом Друзей</a>
+            <ul class="nav-menu">
+                <li><a href="/">Главная</a></li>
+                <li><a href="/catalog">Каталог</a></li>
+                <li><a href="/about">О нас</a></li>
+                <li><a href="/contacts">Контакты</a></li>
+                <li><a href="/volunteer">🤝 Стать волонтёром</a></li>
+                {% if session.username %}
+                    <li class="user-menu">
+                        <div class="user-welcome">👤 {{ session.username }}</div>
+                        <div class="dropdown">
+                            {% if session.role == 'admin' %}
+                                <a href="/admin" class="admin-link">🔧 Админ-панель</a>
+                            {% endif %}
+                            <a href="/logout" class="logout-btn">🚪 Выйти</a>
+                        </div>
+                    </li>
+                {% else %}
+                    <li><a href="/login" class="login-btn">Вход</a></li>
+                    <li><a href="/register" class="register-btn">Регистрация</a></li>
+                {% endif %}
+            </ul>
+            <div class="hamburger">☰</div>
+        </div>
+    </nav>
+
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>🐾 Приют для животных "Дом Друзей" | Забота о каждом хвосте с 2026 года</p>
+            <p>📞 Горячая линия: +7 (999) 123-45-67</p>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            document.querySelector('.nav-menu').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

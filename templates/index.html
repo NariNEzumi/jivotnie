@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Главная - Приют для животных{% endblock %}
+
+{% block content %}
+<!-- Hero секция с фоновым фото котят -->
+<section class="hero" id="heroSection">
+    <div class="container hero-content">
+        <h1>🐾 Дом Друзей</h1>
+        <p>Каждое животное заслуживает любящий дом</p>
+        <a href="/catalog" class="btn-primary">Выбрать питомца →</a>
+    </div>
+</section>
+
+<section class="features">
+    <div class="container">
+        <h2>Почему выбирают нас?</h2>
+        <div class="features-grid">
+            <div class="feature-card" onclick="openFeatureModal('vet')">
+                <div class="feature-icon">🏠</div>
+                <h3>Проверенные питомцы</h3>
+                <p>Все животные привиты и здоровы</p>
+            </div>
+            <div class="feature-card" onclick="openFeatureModal('care')">
+                <div class="feature-icon">❤️</div>
+                <h3>Забота о каждом</h3>
+                <p>Индивидуальный подход к будущим хозяевам</p>
+            </div>
+            <div class="feature-card" onclick="openFeatureModal('transparent')">
+                <div class="feature-icon">📋</div>
+                <h3>Прозрачное оформление</h3>
+                <p>Честные условия и поддержка после усыновления</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="recent-pets">
+    <div class="container">
+        <h2>Недавние питомцы</h2>
+        <div class="pets-grid">
+            {% for animal in animals %}
+            <div class="pet-card">
+                <div class="pet-photo">
+                    <img src="{{ url_for('static', filename='uploads/' + animal[6]) }}" alt="{{ animal[1] }}">
+                    <span class="pet-type-badge">{{ animal[2] }}</span>
+                </div>
+                <div class="pet-info">
+                    <h3>{{ animal[1] }}</h3>
+                    <p>{{ animal[2] }} | {{ animal[3] }} | {{ animal[4] }}</p>
+                    <a href="/apply/{{ animal[0] }}" class="btn-small">Хочу забрать →</a>
+                </div>
+            </div>
+            {% else %}
+            <p>Пока нет животных, скоро появятся!</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Модальные окна -->
+<div id="modalVet" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeFeatureModal('vet')">&times;</span>
+        <div class="modal-body">
+            <div class="modal-info" style="width: 100%; padding: 0;">
+                <h2>Проверенные питомцы</h2>
+                <p>Все животные, попадающие в наш приют, проходят полный ветеринарный осмотр. Мы гарантируем:</p>
+                <ul><li>Прививки по возрасту</li><li>Обработку от паразитов</li><li>Стерилизацию или кастрацию для взрослых</li><li>Ветеринарный паспорт</li></ul>
+                <p>Вы получаете здорового питомца с понятной историей. Мы не скрываем недостатков — честность превыше всего.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalCare" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeFeatureModal('care')">&times;</span>
+        <div class="modal-body">
+            <div class="modal-info" style="width: 100%; padding: 0;">
+                <h2>Забота о каждом</h2>
+                <p>Мы подбираем питомца не «на глаз», а с учётом вашего образа жизни:</p>
+                <ul><li>Для активных людей — энергичные собаки</li><li>Для спокойных — ласковые кошки</li><li>Консультации по воспитанию и уходу</li><li>Помощь в адаптации после переезда</li></ul>
+                <p>Мы остаёмся на связи и после того, как питомец обрёл дом.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalTransparent" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeFeatureModal('transparent')">&times;</span>
+        <div class="modal-body">
+            <div class="modal-info" style="width: 100%; padding: 0;">
+                <h2>Прозрачное оформление</h2>
+                <p>Никаких скрытых платежей и подводных камней:</p>
+                <ul><li>Договор ответственного содержания</li><li>Знакомство с питомцем до подписания документов</li><li>Пост-сопровождение: ответим на любые вопросы</li><li>Если не сложится — поможем найти новый дом</li></ul>
+                <p>Ваше спокойствие и счастье животного — наши главные приоритеты.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openFeatureModal(type) {
+        const modalId = type === 'vet' ? 'modalVet' : (type === 'care' ? 'modalCare' : 'modalTransparent');
+        const modal = document.getElementById(modalId);
+        if (modal) { modal.style.display = 'block'; document.body.style.overflow = 'hidden'; }
+    }
+    function closeFeatureModal(type) {
+        const modalId = type === 'vet' ? 'modalVet' : (type === 'care' ? 'modalCare' : 'modalTransparent');
+        const modal = document.getElementById(modalId);
+        if (modal) { modal.style.display = 'none'; document.body.style.overflow = 'auto'; }
+    }
+    window.onclick = function(event) {
+        const modals = ['modalVet', 'modalCare', 'modalTransparent'];
+        modals.forEach(id => {
+            const modal = document.getElementById(id);
+            if (event.target === modal) { modal.style.display = 'none'; document.body.style.overflow = 'auto'; }
+        });
+    }
+    document.querySelectorAll('.close-modal').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const modal = this.closest('.modal');
+            if (modal) { modal.style.display = 'none'; document.body.style.overflow = 'auto'; }
+        });
+    });
+</script>
+
+<style>
+    /* Фоновое изображение с котятами (надёжная ссылка) */
+    .hero {
+        background: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.45)), 
+                    url('https://images.pexels.com/photos/2071873/pexels-photo-2071873.jpeg');
+        background-size: cover;
+        background-position: center 35%;
+        background-attachment: fixed;
+        transition: none;
+    }
+    /* Если вы хотите использовать своё локальное фото, замените ссылку на /static/uploads/kittens.jpg */
+</style>
+{% endblock %}

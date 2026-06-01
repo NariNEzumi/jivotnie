@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Контакты - Приют для животных{% endblock %}
+
+{% block content %}
+<section class="page-header page-header-contacts">
+    <div class="container">
+        <h1>📞 Свяжитесь с нами</h1>
+        <p>Мы всегда рады ответить на ваши вопросы</p>
+    </div>
+</section>
+
+<section class="contacts-content">
+    <div class="container">
+        <div class="contacts-grid">
+            <!-- Блок контактной информации -->
+            <div class="contact-info">
+                <div class="contact-card">
+                    <div class="contact-icon">📍</div>
+                    <h3>Адрес</h3>
+                    <p>г. Москва, ул. Добрая, д. 15</p>
+                    <p class="contact-detail">Ежедневно: 10:00 – 20:00</p>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">📞</div>
+                    <h3>Телефон</h3>
+                    <p>+7 (999) 123-45-67</p>
+                    <p>+7 (999) 765-43-21</p>
+                    <p class="contact-detail">Звонки принимаем с 9:00 до 21:00</p>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">✉️</div>
+                    <h3>Email</h3>
+                    <p>info@domdruzei.ru</p>
+                    <p>volunteer@domdruzei.ru</p>
+                    <p class="contact-detail">Отвечаем в течение 24 часов</p>
+                </div>
+                <div class="contact-card social-card">
+                    <div class="contact-icon">🌐</div>
+                    <h3>Мы в соцсетях</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link">VK</a>
+                        <a href="#" class="social-link">Telegram</a>
+                        <a href="#" class="social-link">Instagram</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Форма обратной связи -->
+            <div class="contact-form">
+                <h3>Напишите нам</h3>
+                <form action="#" method="POST">
+                    <div class="form-group">
+                        <input type="text" placeholder="Ваше имя" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" placeholder="Ваш Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" placeholder="Телефон (необязательно)">
+                    </div>
+                    <div class="form-group">
+                        <textarea rows="5" placeholder="Сообщение..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary submit-btn">Отправить сообщение →</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Блок карты -->
+        <div class="map">
+            <h3>Как нас найти</h3>
+            <div class="map-placeholder">
+                <div class="map-overlay">
+                    <p>📍 г. Москва, ул. Добрая, 15</p>
+                    <p>Схема проезда: от м. Добрынинская, выход №3, автобус 123 до остановки "Приют"</p>
+                </div>
+                <iframe 
+                    src="https://yandex.ru/map-widget/v1/?ll=37.617698,55.755864&z=12" 
+                    width="100%" 
+                    height="300" 
+                    frameborder="0"
+                    style="border-radius: 15px; pointer-events: none;">
+                </iframe>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
