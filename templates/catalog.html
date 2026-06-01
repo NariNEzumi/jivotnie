@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Каталог животных{% endblock %}
+
+{% block content %}
+<section class="page-header page-header-catalog">
+    <div class="container">
+        <h1>🐕 Наши питомцы</h1>
+        <p>Нажмите на карточку, чтобы узнать подробности</p>
+    </div>
+</section>
+
+<section class="catalog-filters">
+    <div class="container">
+        <div class="filter-buttons">
+            <a href="/catalog?type=all" class="filter-btn {% if selected_type == 'all' %}active{% endif %}">Все</a>
+            <a href="/catalog?type=Кошка" class="filter-btn {% if selected_type == 'Кошка' %}active{% endif %}">🐱 Кошки</a>
+            <a href="/catalog?type=Собака" class="filter-btn {% if selected_type == 'Собака' %}active{% endif %}">🐶 Собаки</a>
+        </div>
+    </div>
+</section>
+
+<section class="pets-list">
+    <div class="container">
+        <div class="pets-grid">
+            {% for animal in animals %}
+            <div class="pet-card" data-id="{{ animal[0] }}" data-name="{{ animal[1] }}" data-type="{{ animal[2] }}" data-breed="{{ animal[3] }}" data-age="{{ animal[4] }}" data-desc="{{ animal[5] }}" data-photo="{{ url_for('static', filename='uploads/' + animal[6]) }}">
+                <div class="pet-photo">
+                    <img src="{{ url_for('static', filename='uploads/' + animal[6]) }}" alt="{{ animal[1] }}">
+                    <span class="pet-type-badge">{{ animal[2] }}</span>
+                </div>
+                <div class="pet-info">
+                    <h3>{{ animal[1] }}</h3>
+                    <p class="pet-breed">{{ animal[3] }}</p>
+                    <p class="pet-age">📅 Возраст: {{ animal[4] }}</p>
+                    <p class="pet-desc">{{ animal[5][:100] }}{% if animal[5]|length > 100 %}...{% endif %}</p>
+                    <button class="btn-small modal-trigger" data-id="{{ animal[0] }}">🔍 Подробнее</button>
+                    <a href="/apply/{{ animal[0] }}" class="btn-small" style="background: #ff6b6b;">Хочу забрать →</a>
+                </div>
+            </div>
+            {% else %}
+            <div class="no-pets">
+                <p>😢 В этой категории пока нет животных</p>
+                <a href="/catalog?type=all" class="btn-primary">Посмотреть всех</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Модальное окно для животного (единое) -->
+<div id="animalModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="modal-body">
+            <div class="modal-photo">
+                <img id="modalImg" src="" alt="Фото животного">
+            </div>
+            <div class="modal-info">
+                <h2 id="modalName"></h2>
+                <p><strong>Тип:</strong> <span id="modalType"></span></p>
+                <p><strong>Порода:</strong> <span id="modalBreed"></span></p>
+                <p><strong>Возраст:</strong> <span id="modalAge"></span></p>
+                <p><strong>Описание:</strong> <span id="modalDesc"></span></p>
+                <a id="modalApplyLink" href="#" class="btn-primary">Хочу забрать →</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Модальное окно для животных
+    const modal = document.getElementById('animalModal');
+    const closeBtn = document.querySelector('#animalModal .close-modal');
+    
+    function openAnimalModal(animalId, name, type, breed, age, description, photoUrl) {
+        document.getElementById('modalName').textContent = name;
+        document.getElementById('modalType').textContent = type;
+        document.getElementById('modalBreed').textContent = breed;
+        document.getElementById('modalAge').textContent = age;
+        document.getElementById('modalDesc').textContent = description;
+        document.getElementById('modalImg').src = photoUrl;
+        document.getElementById('modalApplyLink').href = `/apply/${animalId}`;
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeAnimalModal() {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+    
+    closeBtn.onclick = closeAnimalModal;
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            closeAnimalModal();
+        }
+    }
+    
+    // Обработчики на кнопки "Подробнее"
+    document.querySelectorAll('.modal-trigger').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const card = this.closest('.pet-card');
+            const id = card.dataset.id;
+            const name = card.dataset.name;
+            const type = card.dataset.type;
+            const breed = card.dataset.breed;
+            const age = card.dataset.age;
+            const desc = card.dataset.desc;
+            const photo = card.dataset.photo;
+            openAnimalModal(id, name, type, breed, age, desc, photo);
+        });
+    });
+</script>
+{% endblock %}
